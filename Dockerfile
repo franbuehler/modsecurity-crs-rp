@@ -19,3 +19,4 @@ EXPOSE 8001
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["httpd", "-k", "start", "-f", "/etc/httpd/conf/httpd.conf", "-D", "FOREGROUND"]
+
