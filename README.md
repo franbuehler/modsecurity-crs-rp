@@ -3,13 +3,14 @@
 This Docker image inherits from the official OWASP Core Rule Set Docker image (ModSecurity + Core Rule Set) and adds some configurable variables and an Apache Reverse Proxy configuration.
 
 ## Environment Variables
-PARANOIA: paranoia_level
-ANOMALYIN: inbound_anomaly_score_threshold
-ANOMALYOUT: outbound_anomaly_score_threshold
+* PARANOIA: paranoia_level
+* ANOMALYIN: inbound_anomaly_score_threshold
+* ANOMALYOUT: outbound_anomaly_score_threshold
+
 See https://coreruleset.org/
 
-BACKEND: application backend
-PORT: listening port of apache, this port must be exposed: --expose
+* BACKEND: application backend
+* PORT: listening port of apache, this port must be exposed: --expose
 
 ## Example
 ```
