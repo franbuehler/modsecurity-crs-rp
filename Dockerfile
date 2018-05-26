@@ -8,11 +8,12 @@ ENV PORT=8001
 ENV BACKEND=http://172.17.0.1:8000
 
 COPY httpd.conf /etc/httpd/conf/httpd.conf
+COPY 403.html /etc/httpd/htdocs/error/
 COPY docker-entrypoint.sh /
 
 RUN mkdir -p /etc/httpd/htdocs \
   && mkdir /var/log/httpd/audit/ \
-  && chown apache:apache -R /var/log/httpd/ /docker-entrypoint.sh /etc/httpd/conf/httpd.conf
+  && chown apache:apache -R /var/log/httpd/ /docker-entrypoint.sh /etc/httpd/conf/httpd.conf /etc/httpd/htdocs/
 
 EXPOSE 8001
 
