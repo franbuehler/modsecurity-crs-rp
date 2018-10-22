@@ -9,6 +9,7 @@ ENV BACKEND=http://172.17.0.1:8000
 
 COPY httpd.conf /etc/apache2/conf/httpd.conf
 COPY 403.html /etc/apache2/htdocs/error/
+COPY CRS-logo-full_size-512x257.png /etc/apache2/htdocs/error/
 COPY docker-entrypoint.sh /
 
 RUN mkdir /var/log/apache2/audit \
