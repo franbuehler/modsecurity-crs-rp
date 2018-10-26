@@ -8,17 +8,14 @@ ENV PORT=8001
 ENV BACKEND=http://172.17.0.1:8000
 
 COPY httpd.conf /etc/apache2/conf/httpd.conf
-COPY 403.html /etc/apache2/htdocs/error/
-COPY CRS-logo-full_size-512x257.png /etc/apache2/htdocs/error/
+COPY 403.html /var/www/html/error/
+COPY CRS-logo-full_size-512x257.png /var/www/html/error/
 COPY docker-entrypoint.sh /
 
-RUN mkdir /var/log/apache2/audit \
-  && chown www-data:www-data -R /var/log/apache2/ /docker-entrypoint.sh /etc/apache2/conf/httpd.conf /etc/apache2/htdocs/
-
-EXPOSE 8001
+RUN chown www-data:www-data -R /var/log/apache2/ /docker-entrypoint.sh /etc/apache2/conf/httpd.conf /var/www/html/ \
+    && mkdir /var/log/apache2/audit
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apachectl", "-f", "/etc/apache2/conf/httpd.conf", "-D", "FOREGROUND"]
-#CMD ["httpd", "-k", "start", "-f", "/etc/httpd/conf/httpd.conf", "-D", "FOREGROUND"]
 
 USER www-data
