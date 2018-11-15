@@ -57,7 +57,6 @@ docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
    franbuehler/modsecurity-crs-rp
 ```
 
-<br />
 
 ### Example run command for CI integration when no port mapping is possible
 
@@ -72,7 +71,6 @@ docker run -dt --name apachecrsrp \
    franbuehler/modsecurity-crs-rp
 ```
 
-<br />
 
 ### Just another example
 
@@ -93,5 +91,4 @@ docker run -dti --name apachecrsrp \
    -e PORT=8080 franbuehler/modsecurity-crs-rp
 ```
 
-<br />
 
