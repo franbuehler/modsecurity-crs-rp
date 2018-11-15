@@ -29,25 +29,12 @@ See https://coreruleset.org/ for further information.
 * PORT: listening port of apache
 
 ## Examples
-```
-docker run -dt --name apachecrsrp -e PARANOIA=1 -e \
-ANOMALYIN=5 -e ANOMALYOUT=4 -e BACKEND=http://172.17.0.1:8000 \
--e PORT=8001 --expose 8001 franbuehler/modsecurity-crs-rp
-```
-<br />
+
+
+### Full example with all possible environment variables
 
 ```
-docker run -dti --name apachecrsrp -p 1.2.3.4:80:8080 -e PARANOIA=1 \
--e EXECUTING_PARANOIA=3 -e ANOMALYIN=10 -e ANOMALYOUT=5 -e MAX_NUM_ARGS=255 \
--e ARG_NAME_LENGTH=100 -e ARG_LENGTH=400 -e TOTAL_ARG_LENGTH=64000 \
--e MAX_FILE_SIZE=1048576 -e COMBINED_FILESIZES=1048576 \
--e BACKEND=http://192.168.192.57:8000 -e PORT=8080 franbuehler/modsecurity-crs-rp
-```
-
-<br />
-
-```
-docker run -dti --name apachecrs -p 0.0.0.0:80:8001 \
+docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
    -e PARANOIA=1 \
    -e EXECUTING_PARANOIA=2 \
    -e ENFORCE_BODYPROC_URLENCODED=1 \
@@ -69,4 +56,42 @@ docker run -dti --name apachecrs -p 0.0.0.0:80:8001 \
    -e PORT=8001 \
    franbuehler/modsecurity-crs-rp
 ```
+
+<br />
+
+### Example run command for CI integration when no port mapping is possible
+
+```
+docker run -dt --name apachecrsrp \
+   -e PARANOIA=1 \
+   -e ANOMALYIN=5 \
+   -e ANOMALYOUT=4 \
+   -e BACKEND=http://172.17.0.1:8000 \
+   -e PORT=8001 
+   --expose 8001 
+   franbuehler/modsecurity-crs-rp
+```
+
+<br />
+
+### Just another example
+
+```
+docker run -dti --name apachecrsrp \
+   -p 1.2.3.4:80:8080 \
+   -e PARANOIA=1 \
+   -e EXECUTING_PARANOIA=3 \
+   -e ANOMALYIN=10 \
+   -e ANOMALYOUT=5 \
+   -e MAX_NUM_ARGS=255 \
+   -e ARG_NAME_LENGTH=100 \
+   -e ARG_LENGTH=400 \
+   -e TOTAL_ARG_LENGTH=64000 \
+   -e MAX_FILE_SIZE=1048576 \
+   -e COMBINED_FILESIZES=1048576 \
+   -e BACKEND=http://192.168.192.57:8000 \
+   -e PORT=8080 franbuehler/modsecurity-crs-rp
+```
+
+<br />
 
