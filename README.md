@@ -5,8 +5,16 @@ This Docker image inherits from the official OWASP Core Rule Set Docker image (M
 ## Environment Variables
 * PARANOIA: paranoia_level
 * EXECUTING_PARANOIA: executing_paranoia_level
+* ENFORCE_BODYPROC_URLENCODED: enforce_bodyproc_urlencoded
 * ANOMALYIN: inbound_anomaly_score_threshold
 * ANOMALYOUT: outbound_anomaly_score_threshold
+* ALLOWED_METHODS: allowed_methods
+* ALLOWED_REQUEST_CONTENT_TYPE: allowed_request_content_type
+* ALLOWED_REQUEST_CONTENT_TYPE_CHARSET: allowed_request_content_type_charset
+* ALLOWED_HTTP_VERSIONS: allowed_http_versions
+* RESTRICTED_EXTENSIONS: restricted_extensions
+* RESTRICTED_HEADERS: restricted_headers
+* STATIC_EXTENSIONS: static_extensions
 * MAX_NUM_ARGS: max_num_args
 * ARG_NAME_LENGTH: arg_name_length
 * ARG_LENGTH: arg_length
@@ -18,7 +26,7 @@ This Docker image inherits from the official OWASP Core Rule Set Docker image (M
 See https://coreruleset.org/ for further information.
 
 * BACKEND: application backend
-* PORT: listening port of apache, this port must be exposed: --expose
+* PORT: listening port of apache
 
 ## Examples
 ```
@@ -26,7 +34,7 @@ docker run -dt --name apachecrsrp -e PARANOIA=1 -e \
 ANOMALYIN=5 -e ANOMALYOUT=4 -e BACKEND=http://172.17.0.1:8000 \
 -e PORT=8001 --expose 8001 franbuehler/modsecurity-crs-rp
 ```
-
+<br />
 
 ```
 docker run -dti --name apachecrsrp -p 1.2.3.4:80:8080 -e PARANOIA=1 \
@@ -36,4 +44,29 @@ docker run -dti --name apachecrsrp -p 1.2.3.4:80:8080 -e PARANOIA=1 \
 -e BACKEND=http://192.168.192.57:8000 -e PORT=8080 franbuehler/modsecurity-crs-rp
 ```
 
+<br />
+
+```
+docker run -dti --name apachecrs -p 0.0.0.0:80:8001 \
+   -e PARANOIA=1 \
+   -e EXECUTING_PARANOIA=2 \
+   -e ENFORCE_BODYPROC_URLENCODED=1 \
+   -e ANOMALYIN=10 \
+   -e ANOMALYOUT=5 \
+   -e ALLOWED_METHODS="GET POST PUT" \
+   -e ALLOWED_REQUEST_CONTENT_TYPE_CHARSET="utf-8|iso-8859-1" \
+   -e ALLOWED_HTTP_VERSIONS="HTTP/1.1 HTTP/2 HTTP/2.0" \
+   -e RESTRICTED_EXTENSIONS=".cmd/ .com/ .config/ .dll/" \
+   -e RESTRICTED_HEADERS="/proxy/ /if/" \
+   -e STATIC_EXTENSIONS="/.jpg/ /.jpeg/ /.png/ /.gif/" \
+   -e MAX_NUM_ARGS=128 \
+   -e ARG_NAME_LENGTH=50 \
+   -e ARG_LENGTH=200 \
+   -e TOTAL_ARG_LENGTH=6400 \
+   -e MAX_FILE_SIZE=100000 \
+   -e COMBINED_FILE_SIZES=1000000 \
+   -e BACKEND=http://192.168.192.57:8000 \
+   -e PORT=8001 \
+   franbuehler/modsecurity-crs-rp
+```
 

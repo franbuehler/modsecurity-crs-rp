@@ -18,12 +18,92 @@ if "EXECUTING_PARANOIA" in os.environ:
 EOF
 ) && \
 
+# Enforce Body Processor URLENCODED
+$(python <<EOF
+import re
+import os
+if "ENFORCE_BODYPROC_URLENCODED" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{7}id:900010[\s\S]*tx\.enforce_bodyproc_urlencoded=1\")','SecAction \\\\\n  \"id:900010, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:tx.enforce_bodyproc_urlencoded='+os.environ['ENFORCE_BODYPROC_URLENCODED']+'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
 # Inbound and Outbound Anomaly Score
 $(python <<EOF
 import re
 import os
 out=re.sub('(#SecAction[\S\s]{6}id:900110[\s\S]*tx\.outbound_anomaly_score_threshold=4\")','SecAction \\\\\n  \"id:900110, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:tx.inbound_anomaly_score_threshold='+os.environ['ANOMALYIN']+','+'  \\\\\n   setvar:tx.outbound_anomaly_score_threshold='+os.environ['ANOMALYOUT']+'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
 open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# HTTP methods that a client is allowed to use.
+$(python <<EOF
+import re
+import os
+if "ALLOWED_METHODS" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900200[\s\S]*\'tx\.allowed_methods=[A-Z\s]*\'\")','SecAction \\\\\n  \"id:900200, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.allowed_methods='+os.environ['ALLOWED_METHODS']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# Content-Types that a client is allowed to send in a request.
+$(python <<EOF
+import re
+import os
+if "ALLOWED_REQUEST_CONTENT_TYPE" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900220[\s\S]*\'tx.allowed_request_content_type=[a-z|\-\+\/]*\'\")','SecAction \\\\\n  \"id:900220, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.allowed_request_content_type='+os.environ['ALLOWED_REQUEST_CONTENT_TYPE']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# Content-Types charsets that a client is allowed to send in a request.
+$(python <<EOF
+import re
+import os
+if "ALLOWED_REQUEST_CONTENT_TYPE_CHARSET" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900270[\s\S]*\'tx.allowed_request_content_type_charset=[|\-a-z0-9]*\'\")','SecAction \\\\\n  \"id:900270, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.allowed_request_content_type_charset='+os.environ['ALLOWED_REQUEST_CONTENT_TYPE_CHARSET']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# Allowed HTTP versions.
+$(python <<EOF
+import re
+import os
+if "ALLOWED_HTTP_VERSIONS" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900230[\s\S]*\'tx.allowed_http_versions=[HTP012\/\.\s]*\'\")','SecAction \\\\\n  \"id:900230, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.allowed_http_versions='+os.environ['ALLOWED_HTTP_VERSIONS']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# Forbidden file extensions.
+$(python <<EOF
+import re
+import os
+if "RESTRICTED_EXTENSIONS" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900240[\s\S]*\'tx.restricted_extensions=[\.a-z\s\/]*\/\'\")','SecAction \\\\\n  \"id:900240, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.restricted_extensions='+os.environ['RESTRICTED_EXTENSIONS']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# Forbidden request headers.
+$(python <<EOF
+import re
+import os
+if "RESTRICTED_HEADERS" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900250[\s\S]*\'tx.restricted_headers=[a-z\s\/\-]*\'\")','SecAction \\\\\n  \"id:900250, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.restricted_headers='+os.environ['RESTRICTED_HEADERS']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
+EOF
+) && \
+
+# File extensions considered static files.
+$(python <<EOF
+import re
+import os
+if "STATIC_EXTENSIONS" in os.environ:
+   out=re.sub('(#SecAction[\S\s]{6}id:900260[\s\S]*\'tx.static_extensions=\/[a-z\s\/\.]*\'\")','SecAction \\\\\n  \"id:900260, \\\\\n   phase:1, \\\\\n   nolog, \\\\\n   pass, \\\\\n   t:none, \\\\\n   setvar:\'tx.static_extensions='+os.environ['STATIC_EXTENSIONS']+'\'\"',open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','r').read())
+   open('/etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf','w').write(out)
 EOF
 ) && \
 
