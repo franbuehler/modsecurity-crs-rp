@@ -28,10 +28,45 @@ See https://coreruleset.org/ for further information.
 * BACKEND: application backend
 * PORT: listening port of apache
 
-## Examples
+## ModSecurity Tuning
+
+There are two possible ways to pass ModSecurity tuning rules to the container:
+
+* To map the ModSecurity tuning file(s) via volumes into the container during the run command 
+* To copy the ModSecurity tuning file(s) into the created container and then start the container
+
+##### Map ModSecurity tuning file via volume
+
+```
+docker run -dti \
+   --name apachecrsrp \
+   -p 1.2.3.4:80:8001 \
+   -v /path/to/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf:/etc/apache2/modsecurity.d/owasp-crs/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf \
+   -v /path/to/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf:/etc/apache2/modsecurity.d/owasp-crs/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf \
+   franbuehler/modsecurity-crs-rp:v3.1
+```
+
+##### Copy ModSecurity tuning file into created container
+
+This example can be helpful when no volume mounts are possible (some CI pipelines).
+
+```
+docker create -ti --name apachecrsrp \
+   -p 1.2.3.4:80:8001 \
+   franbuehler/modsecurity-crs-rp:v3.1
+
+docker cp /path/to/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf \
+   apachecrsrp:/etc/apache2/modsecurity.d/owasp-crs/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
+
+docker start apachecrsrp
+```
 
 
-### Full example with all possible environment variables
+
+## Environmant variables examples
+
+
+##### Full example with all possible environment variables
 
 ```
 docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
@@ -58,7 +93,7 @@ docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
 ```
 
 
-### Example run command for CI integration when no port mapping is possible
+##### Example run command for CI integration when no port mapping is possible
 
 ```
 docker run -dt --name apachecrsrp \
@@ -72,7 +107,7 @@ docker run -dt --name apachecrsrp \
 ```
 
 
-### Just another example
+##### Just another example
 
 ```
 docker run -dti --name apachecrsrp \
