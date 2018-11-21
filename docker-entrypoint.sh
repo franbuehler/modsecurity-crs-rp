@@ -185,6 +185,14 @@ open('/etc/apache2/conf/httpd.conf','w').write(out)
 EOF
 ) && \
 
+#... and Backend to where we proxy the incoming requests
+$(python <<EOF
+import re
+import os
+out=re.sub('(http://localhost:8002)',os.environ['BACKEND'],open('/etc/apache2/conf/httpd.conf','r').read())
+open('/etc/apache2/conf/httpd.conf','w').write(out)
+EOF
+) && \
 
 if [ ! -z $PROXY ]; then
   if [ $PROXY -eq 1 ]; then
