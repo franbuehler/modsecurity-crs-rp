@@ -1,7 +1,13 @@
 # modsecurity-crs-rp
 
-This Docker image inherits from the official OWASP Core Rule Set Docker image (ModSecurity + Core Rule Set) and adds some configurable variables and an Apache Reverse Proxy configuration.
+This Docker image inherits from the official OWASP Core Rule Set Docker image (ModSecurity + Core Rule Set) and adds some configurable variables and an Apache Reverse Proxy configuration. 
 
+The goal is to provide a fully functional CRS in a single command:  
+* This container can be placed in front of an application.
+* Many CRS variables can be set.
+* And it can additionally consider ModSecurity CRS tuning.
+  
+  
 ## Environment Variables
 * PARANOIA: paranoia_level
 * EXECUTING_PARANOIA: executing_paranoia_level
@@ -21,22 +27,23 @@ This Docker image inherits from the official OWASP Core Rule Set Docker image (M
 * TOTAL_ARG_LENGTH: total_arg_length
 * MAX_FILE_SIZE: max_file_size
 * COMBINED_FILE_SIZES: combined_file_sizes
-
-
+  
+  
 See https://coreruleset.org/ for further information.
-
+  
 * BACKEND: application backend
 * PORT: listening port of apache
-
+  
 ## ModSecurity Tuning
-
+  
 There are two possible ways to pass ModSecurity tuning rules to the container:
 
 * To map the ModSecurity tuning file(s) via volumes into the container during the run command 
 * To copy the ModSecurity tuning file(s) into the created container and then start the container
-
+  
+  
 ##### Map ModSecurity tuning file via volume
-
+  
 ```
 docker run -dti \
    --name apachecrsrp \
@@ -45,29 +52,30 @@ docker run -dti \
    -v /path/to/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf:/etc/apache2/modsecurity.d/owasp-crs/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf \
    franbuehler/modsecurity-crs-rp:v3.1
 ```
-
+  
+  
 ##### Copy ModSecurity tuning file into created container
-
+  
 This example can be helpful when no volume mounts are possible (some CI pipelines).
-
+  
 ```
 docker create -ti --name apachecrsrp \
    -p 1.2.3.4:80:8001 \
    franbuehler/modsecurity-crs-rp:v3.1
-
+  
 docker cp /path/to/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf \
    apachecrsrp:/etc/apache2/modsecurity.d/owasp-crs/RESPONSE-999-EXCLUSION-RULES-AFTER-CRS.conf
-
+  
 docker start apachecrsrp
 ```
-
-
-
-## Environmant variables examples
-
-
+  
+  
+  
+## docker run examples
+  
+  
 ##### Full example with all possible environment variables
-
+  
 ```
 docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
    -e PARANOIA=1 \
@@ -76,6 +84,7 @@ docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
    -e ANOMALYIN=10 \
    -e ANOMALYOUT=5 \
    -e ALLOWED_METHODS="GET POST PUT" \
+   -e ALLOWED_REQUEST_CONTENT_TYPE="text/xml|application/xml|text/plain" \
    -e ALLOWED_REQUEST_CONTENT_TYPE_CHARSET="utf-8|iso-8859-1" \
    -e ALLOWED_HTTP_VERSIONS="HTTP/1.1 HTTP/2 HTTP/2.0" \
    -e RESTRICTED_EXTENSIONS=".cmd/ .com/ .config/ .dll/" \
@@ -91,10 +100,10 @@ docker run -dti --name apachecrsrp -p 0.0.0.0:80:8001 \
    -e PORT=8001 \
    franbuehler/modsecurity-crs-rp
 ```
-
-
+  
+  
 ##### Example run command for CI integration when no port mapping is possible
-
+  
 ```
 docker run -dt --name apachecrsrp \
    -e PARANOIA=1 \
@@ -105,10 +114,10 @@ docker run -dt --name apachecrsrp \
    --expose 8001 
    franbuehler/modsecurity-crs-rp
 ```
-
-
+  
+  
 ##### Just another example
-
+  
 ```
 docker run -dti --name apachecrsrp \
    -p 1.2.3.4:80:8080 \
@@ -125,5 +134,5 @@ docker run -dti --name apachecrsrp \
    -e BACKEND=http://192.168.192.57:8000 \
    -e PORT=8080 franbuehler/modsecurity-crs-rp
 ```
-
-
+  
+    
