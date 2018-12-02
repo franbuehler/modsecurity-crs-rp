@@ -136,3 +136,10 @@ docker run -dti --name apachecrsrp \
 ```
   
     
+## Example docker-compose.yaml
+
+
+##### docker-compose.yaml for easier use
+
+See: https://github.com/franbuehler/modsecurity-crs-rp/blob/v3.1/docker-compose.yaml
+  
