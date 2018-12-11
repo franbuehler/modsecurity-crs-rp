@@ -4,7 +4,7 @@ services:
   crs:
     image: franbuehler/modsecurity-crs-rp:v3.1
     ports:
-      - "80:8001"
+      - "8001:8001"
 
     environment:
       # Listening Port of Apache Reverse Proxy
