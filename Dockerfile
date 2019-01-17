@@ -20,4 +20,4 @@ RUN mkdir /var/log/apache2/audit \
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apachectl", "-f", "/etc/apache2/conf/httpd.conf", "-D", "FOREGROUND"]
 
-USER 1001
+USER www-data
