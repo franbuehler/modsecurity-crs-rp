@@ -15,7 +15,7 @@ COPY docker-entrypoint.sh /
 RUN mkdir /var/log/apache2/audit \
     && chown www-data:root -R /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ \
     && chmod -R g=u /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ /etc/passwd \
-    && chmod 0775 /run/lock/
+    && chmod 0775 /var/lock/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apachectl", "-f", "/etc/apache2/conf/httpd.conf", "-D", "FOREGROUND"]
