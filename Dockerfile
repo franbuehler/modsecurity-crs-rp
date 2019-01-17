@@ -13,8 +13,9 @@ COPY CRS-logo-full_size-512x257.png /var/www/html/error/
 COPY docker-entrypoint.sh /
 
 RUN mkdir /var/log/apache2/audit \
-    &&  chown www-data:root -R /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ \
-    &&  chmod -R g=u /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ /etc/passwd /var/lock/
+    && chown www-data:root -R /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ \
+    && chmod -R g=u /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ /etc/passwd \
+    && chmod 0775 /run/lock/
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["apachectl", "-f", "/etc/apache2/conf/httpd.conf", "-D", "FOREGROUND"]
