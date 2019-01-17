@@ -194,6 +194,13 @@ open('/etc/apache2/conf/httpd.conf','w').write(out)
 EOF
 ) && \
 
+#OpenShift
+if ! whoami &> /dev/null; then
+  if [ -w /etc/passwd ]; then
+    echo "${USER_NAME:-default}:x:$(id -u):0:${USER_NAME:-default} user:${HOME}:/sbin/nologin" >> /etc/passwd
+  fi
+fi
+
 if [ ! -z $PROXY ]; then
   if [ $PROXY -eq 1 ]; then
     APACHE_ARGUMENTS='-D crs_proxy'
