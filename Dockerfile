@@ -12,9 +12,9 @@ COPY 403.html /var/www/html/error/
 COPY CRS-logo-full_size-512x257.png /var/www/html/error/
 COPY docker-entrypoint.sh /
 
-RUN mkdir /var/log/apache2/audit \
+RUN mkdir /var/log/apache2/audit /var/lock/apache2 \
     && chown www-data:root -R /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /var/log/apache2/ /etc/apache2/conf/httpd.conf /var/www/html/ \
-    && chmod 0777 /var/lock/ \
+    && chmod -R 0777 /var/lock/ \
     && chmod g+w -R /etc/apache2/modsecurity.d/owasp-crs/crs-setup.conf /var/run/ /etc/apache2/conf/httpd.conf
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
